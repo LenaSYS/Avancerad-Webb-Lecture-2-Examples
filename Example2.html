@@ -3,11 +3,11 @@
 <div id='content'></div>
 <script>
   const params = {
-    vehicle: "Car"
+    ort: "Arjeplog"
   }
 
   async function getData(){
-      const response = await fetch("../Avancerad-Webb-API/Query.php", {
+      const response = await fetch("../Avancerad-Webb-API/Ort.php", {
         method: 'POST',
         headers: { 'Content-Type': 'application/json'},
         body:JSON.stringify(params)

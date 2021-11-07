@@ -1,7 +1,3 @@
-</script>
-</body>
-</hmtl>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,40 +10,40 @@
 <div id="content"></div>
 <script type="text/babel">
 
-function Product(props) {
-  return <li>{props.name} {props.color}</li>;
-}
-
-class ProductList extends React.Component {
+class Product extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+        data:{name:"Not fetched yet!"}
+    };  
+    this.handleClick = this.handleClick.bind(this);
   }
-  render() {
-    const listItems = this.props.codes.map((code) =>
-        <Product key={code.code} name={code.name} color={code.color} />  
-    );
-    return (
-      <ul>{listItems}</ul>
-    );
-  }
-}
+  async handleClick() {
+    alert("Hello!");
 
-async function getData(){
-    const response = await fetch("../Avancerad-Webb-API/Climatecodes.php", {
+    const response = await fetch("../Avancerad-Webb-API/Ort.php", {
         method: 'POST',
         headers: { 'Content-Type': 'application/json'}
     })
     .then((response) => response.json()).then(data => {
         console.log(data);
-
-        ReactDOM.render(
-              <ProductList codes={data} />,
-              document.getElementById('content')
-          );        
+        this.setState({data:data});  
     });
-  }
 
-  getData();
+  }  
+  render() {
+    return (
+      <div>
+      <button onClick={this.handleClick}>Click to Fetch</button>
+      <p>{this.state.data.name}</p>
+      </div>
+    );
+  }
+}
+
+ReactDOM.render(
+  <Product name="Test" />,  document.getElementById('content')
+);
 
 </script>
 </body>

@@ -15,16 +15,19 @@
 <script type="text/babel">
 
 function Product(props) {
-  return <li>{props.name} {props.color}</li>;
+  return <li>{props.name} {props.likecount}</li>;
 }
 
 class ProductList extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      comments: []
+    };      
   }
   render() {
-    const listItems = this.props.codes.map((code) =>
-        <Product key={code.code} name={code.name} color={code.color} />  
+    const listItems = this.state.comments.map((comment) =>
+        <Product key={comment.commentid} name={comment.username} likecount={comment.nolikes} />  
     );
     return (
       <ul>{listItems}</ul>
@@ -33,17 +36,18 @@ class ProductList extends React.Component {
 }
 
 async function getData(){
-    const response = await fetch("../Avancerad-Webb-API/Climatecodes.php", {
+    const response = await fetch("../Avancerad-Webb-API/Comments.php", {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json'}
+        headers: { 'Content-Type': 'application/json'},
+        body:JSON.stringify(params)
     })
     .then((response) => response.json()).then(data => {
         console.log(data);
-
         ReactDOM.render(
-              <ProductList codes={data} />,
+              <ProductList comments={data} />,
               document.getElementById('content')
           );        
+    
     });
   }
 
