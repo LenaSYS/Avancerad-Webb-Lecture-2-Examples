@@ -1,7 +1,3 @@
-</script>
-</body>
-</hmtl>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,44 +10,48 @@
 <div id="content"></div>
 <script type="text/babel">
 
-function Product(props) {
-  return <li>{props.name} {props.likecount}</li>;
-}
-
-class ProductList extends React.Component {
+class Product extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      comments: []
-    };      
+        data:{name:"Not fetched yet!"},
+        ort:"Arjeplog"
+    };  
+    this.handleClick = this.handleClick.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
+  
+  handleChange(e) {
+    this.setState({ort: e.target.value});  
+  }
+
+  async handleClick() {
+    alert("Hello!");
+    const response = await fetch("../Avancerad-Webb-API/Ort.php", {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json'},
+        body:JSON.stringify({ort:this.state.ort})
+    })
+    .then((response) => response.json()).then(data => {
+        console.log(data);
+        this.setState({data:data});  
+    });
+  }  
   render() {
-    const listItems = this.state.comments.map((comment) =>
-        <Product key={comment.commentid} name={comment.username} likecount={comment.nolikes} />  
-    );
     return (
-      <ul>{listItems}</ul>
+      <div>
+      <input onChange={this.handleChange} />
+      <button onClick={this.handleClick}>Click to Fetch</button>
+      <p>{this.state.data.name}</p>
+      <p>current ort : {this.state.ort}</p>
+      </div>
     );
   }
 }
 
-async function getData(){
-    const response = await fetch("../Avancerad-Webb-API/Comments.php", {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json'},
-        body:JSON.stringify(params)
-    })
-    .then((response) => response.json()).then(data => {
-        console.log(data);
-        ReactDOM.render(
-              <ProductList comments={data} />,
-              document.getElementById('content')
-          );        
-    
-    });
-  }
-
-  getData();
+ReactDOM.render(
+  <Product />,  document.getElementById('content')
+);
 
 </script>
 </body>
